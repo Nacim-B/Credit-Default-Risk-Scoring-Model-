@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/nberraba/Projet 7/mlruns/916249307563039727/5854c4974ac1432fb7f62c2e591fcb63/artifacts
+end_time: 1729774312678
+entry_point_name: ''
+experiment_id: '916249307563039727'
+lifecycle_stage: active
+run_id: 5854c4974ac1432fb7f62c2e591fcb63
+run_name: traveling-stag-480
+run_uuid: 5854c4974ac1432fb7f62c2e591fcb63
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1729774308335
+status: 3
+tags: []
+user_id: nberraba
