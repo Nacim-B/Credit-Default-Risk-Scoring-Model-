@@ -1,2 +1,6 @@
 Home_credit_risk_data_modeling.csv
-data/
+data/y_train_data.csv
+X_train_data.csv
+y_train_data.csv
+/data/
+/mlruns/
