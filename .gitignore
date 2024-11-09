@@ -4,3 +4,4 @@ X_train_data.csv
 y_train_data.csv
 /data/
 /mlruns/
+X_sample_train_data.csv
