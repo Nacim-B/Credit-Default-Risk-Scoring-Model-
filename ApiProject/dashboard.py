@@ -16,7 +16,7 @@ def request_prediction(model_uri, data):
 
 @st.fragment
 def main():
-    URL = 'http://127.0.0.1:8000/predict'
+    URL = 'http://127.0.0.1:8000/predict_proba'
 
     st.title('Credit House Classification')
 
@@ -49,7 +49,7 @@ def main():
         }
         pred = request_prediction(URL, data)
         st.write(
-            f'Prediciton pour ce client : {pred['prediction']}')
+            f"Prédiction :{pred['adjusted_prediction']}, Probabilités : {pred['probabilities']}")
 
 
 if __name__ == '__main__':

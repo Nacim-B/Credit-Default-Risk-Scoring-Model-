@@ -21,6 +21,28 @@ class PredictionRequest(BaseModel):
     # Add more features as necessary
 
 
+# Define the endpoint for probability predictions with custom threshold
+@app.post("/predict_proba")
+def predict_proba(request: PredictionRequest):
+    # Convert the request data to a DataFrame
+    data = pd.DataFrame([request.dict()])
+
+    # Get the prediction probabilities
+    probabilities = pipeline_api.predict_proba(data)[0]
+
+    # Adjust the threshold based on cost ratio
+    cost_ratio = 5  # False negative is 10 times worse than false positive
+    adjusted_threshold = 1 / (1 + cost_ratio)
+
+    # Apply the adjusted threshold for the positive class
+    predicted_class = 1 if probabilities[1] >= adjusted_threshold else 0
+
+    # Return both the probabilities and the adjusted prediction
+    return {
+        "probabilities": probabilities.tolist(),
+        "adjusted_prediction": predicted_class,
+        "adjusted_threshold": adjusted_threshold
+    }
 # Define the prediction endpoint
 @app.post("/predict")
 def predict(request: PredictionRequest):
