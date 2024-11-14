@@ -18,8 +18,6 @@ class PredictionRequest(BaseModel):
     EXT_SOURCE_3: float
     DAYS_EMPLOYED: int
     CODE_GENDER: int
-    INSTAL_AMT_PAYMENT_MIN: float
-    PREV_CNT_PAYMENT_MEAN: float
     # Add more features as necessary
 
 
