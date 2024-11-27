@@ -42,7 +42,7 @@ def predict_proba(request: PredictionRequest):
         # Predict probabilities
         probabilities = pipeline_api.predict_proba(data)[0]
         # Apply a custom threshold
-        cost_ratio = 5
+        cost_ratio = 3
         adjusted_threshold = 1 / (1 + cost_ratio)
         predicted_class = 1 if probabilities[1] >= adjusted_threshold else 0
 
