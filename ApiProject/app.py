@@ -23,6 +23,7 @@ api_app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Define the input schema for the API
 class PredictionRequest(BaseModel):
     EXT_SOURCE_2: float
@@ -30,6 +31,7 @@ class PredictionRequest(BaseModel):
     EXT_SOURCE_3: float
     DAYS_EMPLOYED: int
     CODE_GENDER: int
+
 
 # FastAPI endpoint for predictions
 @api_app.post("/predict_proba")
@@ -52,9 +54,11 @@ def predict_proba(request: PredictionRequest):
     except Exception as e:
         return {"error": str(e)}
 
+
 # Function to run the FastAPI app in a separate thread
 def run_api():
     uvicorn.run(api_app, host="127.0.0.1", port=8000)
+
 
 # Streamlit dashboard
 def run_streamlit():
@@ -85,12 +89,17 @@ def run_streamlit():
             response = requests.post(API_URL, json=data)
             if response.status_code == 200:
                 result = response.json()
-                st.write(f"Prédiction : {result['adjusted_prediction']}")
+                if result['adjusted_prediction'] == 1:
+                    decision = 'Prêt refusé'
+                else :
+                    decision = 'Prêt accordé'
+                st.write(f"Prédiction : {decision}")
                 st.write(f"Probabilités : {result['probabilities']}")
             else:
                 st.error(f"Erreur de l'API : {response.status_code}, {response.text}")
         except Exception as e:
             st.error(f"Erreur lors de la requête : {str(e)}")
+
 
 # Main function to run both FastAPI and Streamlit
 if __name__ == "__main__":
