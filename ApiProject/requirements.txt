@@ -11,3 +11,4 @@ pytest
 fastapi
 httpx
 pytest-mock
+unittest-mock
