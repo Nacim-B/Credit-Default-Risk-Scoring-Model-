@@ -27,7 +27,7 @@ jobs:
       env:
         RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
-        render services update qQuYwli5rh8 \
+        render services update srv-ct9di9popnds73e7v66g \
           --service-type web \
           --branch master \
           --env python
