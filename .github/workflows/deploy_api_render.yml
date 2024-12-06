@@ -27,17 +27,12 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install render-python
 
-    - name: Install Render CLI
-      run: |
-        curl -fsSL https://render.com/install | bash
-        export PATH="$HOME/.render/bin:$PATH"  # Ajoute Render CLI au PATH
-
     - name: Deploy to Render
       env:
         RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
         cd ApiProject
-        render services update srv-ct9di9popnds73e7v66g \
-          --service-type web \
-          --branch master \
-          --env python
+        curl -X POST https://api.render.com/v1/services/srv-ct9di9popnds73e7v66g/deploys \
+          -H "Authorization: Bearer $RENDER_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{}'
