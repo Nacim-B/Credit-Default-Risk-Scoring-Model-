@@ -1,0 +1,38 @@
+name: Deploy API to Render
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Change directory to the subfolder
+      run: cd ApiProject
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11.10'
+
+    - name: Install dependencies
+      run: |
+        cd ApiProject
+        python -m pip install --upgrade pip
+        python -m pip install render-python
+
+    - name: Deploy to Render
+      env:
+        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      run: |
+        cd ApiProject
+        curl -X POST https://api.render.com/v1/services/srv-ct9di9popnds73e7v66g/deploys \
+          -H "Authorization: Bearer $RENDER_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{}'
