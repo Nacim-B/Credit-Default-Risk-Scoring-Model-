@@ -19,7 +19,6 @@ api_app.add_middleware(
     allow_headers=["*"],
 )
 
-
 # Define the input schema for the API
 class PredictionRequest(BaseModel):
     EXT_SOURCE_2: float
