@@ -10,7 +10,7 @@ def test_predict_proba_success(mocker):
     Teste si l'API répond correctement avec une entrée valide
     """
     # Simulez la méthode pipeline_api.predict_proba
-    mock_predict_proba = mocker.patch("fast_api.pipeline_api.predict_proba")
+    mock_predict_proba = mocker.patch("ApiProject.pipeline_api.predict_proba")
     mock_predict_proba.return_value = [[0.2, 0.8]]  # Probabilités fictives
 
     # Données d'entrée valides
