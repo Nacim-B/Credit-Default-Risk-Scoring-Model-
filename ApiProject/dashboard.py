@@ -1,8 +1,7 @@
 import streamlit as st
 import requests
 
-# API URL (ajustez en fonction de l'environnement)
-API_URL = "http://127.0.0.1:8000/predict_proba"  # Local
+API_URL = "https://credit-default-risk-scoring-model.onrender.com/predict_proba"  # onRender Service
 
 st.title("Credit House Classification")
 
