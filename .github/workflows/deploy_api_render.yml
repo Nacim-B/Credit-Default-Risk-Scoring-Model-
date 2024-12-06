@@ -29,8 +29,7 @@ jobs:
 
     - name: Run unit tests
       run: |
-        cd ApiProject  # Navigate to your project folder
-        pytest tests/ --maxfail=1 --disable-warnings  # Run tests and stop at the first failure
+        pytest ApiProject/tests/ --maxfail=1 --disable-warnings  # Run tests and stop at the first failure
 
     - name: Deploy to Render
       if: success()
