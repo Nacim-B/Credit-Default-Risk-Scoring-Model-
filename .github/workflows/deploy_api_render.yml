@@ -27,6 +27,11 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install render-python
 
+    - name: Install Render CLI
+      run: |
+        curl -fsSL https://render.com/install | bash
+        export PATH="$HOME/.render/bin:$PATH"  # Ajoute Render CLI au PATH
+
     - name: Deploy to Render
       env:
         RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
