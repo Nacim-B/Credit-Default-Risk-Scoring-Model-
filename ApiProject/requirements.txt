@@ -7,3 +7,7 @@ scikit-learn
 pydantic
 imblearn
 lightgbm
+pytest
+fastapi
+httpx
+pytest-mock
