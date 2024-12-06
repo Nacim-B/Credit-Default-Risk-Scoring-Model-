@@ -27,7 +27,13 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install render-python
 
+    - name: Run unit tests
+      run: |
+        cd ApiProject  # Navigate to your project folder
+        pytest tests/ --maxfail=1 --disable-warnings  # Run tests and stop at the first failure
+
     - name: Deploy to Render
+      if: success()
       env:
         RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
