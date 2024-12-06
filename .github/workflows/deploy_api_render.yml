@@ -22,8 +22,8 @@ jobs:
         python-version: '3.11.10'
 
     - name: Install dependencies
-      run:
-        cd ApiProject|
+      run: |
+        cd ApiProject
         python -m pip install --upgrade pip
         python -m pip install render-python
 
