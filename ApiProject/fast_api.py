@@ -1,57 +1,54 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import pickle
 import pandas as pd
+import pickle
 
 # Load the trained pipeline
-with open('../pipeline_api.pkl', 'rb') as f:
+with open('pipeline_api.pkl', 'rb') as f:
     pipeline_api = pickle.load(f)
 
-# Initialize FastAPI
-app = FastAPI()
+# Initialize FastAPI app
+api_app = FastAPI()
+
+# Add CORS middleware
+api_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-# Define the input data schema using Pydantic
+# Define the input schema for the API
 class PredictionRequest(BaseModel):
     EXT_SOURCE_2: float
     EXT_SOURCE_1: float
     EXT_SOURCE_3: float
     DAYS_EMPLOYED: int
     CODE_GENDER: int
-    # Add more features as necessary
 
 
-# Define the endpoint for probability predictions with custom threshold
-@app.post("/predict_proba")
+# FastAPI endpoint for predictions
+@api_app.post("/predict_proba")
 def predict_proba(request: PredictionRequest):
-    # Convert the request data to a DataFrame
-    data = pd.DataFrame([request.dict()])
+    try:
+        data = pd.DataFrame([request.dict()])
+        probabilities = pipeline_api.predict_proba(data)[0]
+        cost_ratio = 3
+        adjusted_threshold = 1 / (1 + cost_ratio)
+        predicted_class = 1 if probabilities[1] >= adjusted_threshold else 0
 
-    # Get the prediction probabilities
-    probabilities = pipeline_api.predict_proba(data)[0]
+        return {
+            "probabilities": probabilities.tolist(),
+            "adjusted_prediction": predicted_class,
+            "adjusted_threshold": adjusted_threshold,
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
-    # Adjust the threshold based on cost ratio
-    cost_ratio = 5  # False negative is 10 times worse than false positive
-    adjusted_threshold = 1 / (1 + cost_ratio)
 
-    # Apply the adjusted threshold for the positive class
-    predicted_class = 1 if probabilities[1] >= adjusted_threshold else 0
+if __name__ == "__main__":
+    import uvicorn
 
-    # Return both the probabilities and the adjusted prediction
-    return {
-        "probabilities": probabilities.tolist(),
-        "adjusted_prediction": predicted_class,
-        "adjusted_threshold": adjusted_threshold
-    }
-# Define the prediction endpoint
-@app.post("/predict")
-def predict(request: PredictionRequest):
-    # Convert the request data to a DataFrame
-    data = pd.DataFrame([request.dict()])
-
-    # Make predictions using the loaded pipeline
-    prediction = pipeline_api.predict(data)
-
-    # Return the prediction as a response
-    return {"prediction": prediction[0]}
-
+    uvicorn.run(api_app, host="0.0.0.0", port=8000)

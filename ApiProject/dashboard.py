@@ -1,56 +1,36 @@
-import pandas as pd
 import streamlit as st
 import requests
 
+# API URL (ajustez en fonction de l'environnement)
+API_URL = "http://127.0.0.1:8000/predict_proba"  # Local
 
-def request_prediction(model_uri, data):
-    headers = {"Content-Type": "application/json"}
-    response = requests.request(
-        method='POST', headers=headers, url=model_uri, json=data)
+st.title("Credit House Classification")
 
-    if response.status_code != 200:
-        raise Exception(
-            "Request failed with status {}, {}".format(response.status_code, response.text))
+# Input fields
+income_1 = st.number_input("Source de revenue 1", min_value=0., value=1300., step=100.)
+income_2 = st.number_input("Source de revenue 2", min_value=0., value=0., step=100.)
+income_3 = st.number_input("Source de revenue 3", min_value=0., value=0., step=100.)
+genre = st.radio("Genre", [0, 1], index=0)
+work_duration = st.number_input("Temps d'emploi", max_value=0., value=-300., step=50.)
 
-    return response.json()
+# Predict button
+if st.button("Prédire"):
+    data = {
+        "EXT_SOURCE_2": income_2,
+        "EXT_SOURCE_1": income_1,
+        "EXT_SOURCE_3": income_3,
+        "DAYS_EMPLOYED": work_duration,
+        "CODE_GENDER": genre,
+    }
 
-@st.fragment
-def main():
-    URL = 'http://127.0.0.1:8000/predict_proba'
-
-    st.title('Credit House Classification')
-
-    income_1 = st.number_input('Source de revenue 1',
-                               min_value=0., value=1300., step=100.)
-
-    income_2 = st.number_input('Source de revenue 2',
-                               min_value=0., value=0., step=100.)
-    income_3 = st.number_input('Source de revenue 3',
-                               min_value=0., value=0., step=100.)
-
-    genre = st.radio(
-        "Genre",
-        [0, 1],
-        index=None,
-    )
-
-    work_duration = st.number_input('Temps demploi',
-                                    max_value=0., value=-300., step=50.)
-
-    predict_btn = st.button('Prédire')
-
-    if predict_btn:
-        data = {
-            "EXT_SOURCE_2": income_2,
-            "EXT_SOURCE_1": income_1,
-            "EXT_SOURCE_3": income_3,
-            "DAYS_EMPLOYED": work_duration,
-            "CODE_GENDER": genre
-        }
-        pred = request_prediction(URL, data)
-        st.write(
-            f"Prédiction :{pred['adjusted_prediction']}, Probabilités : {pred['probabilities']}")
-
-
-if __name__ == '__main__':
-    main()
+    try:
+        response = requests.post(API_URL, json=data)
+        if response.status_code == 200:
+            result = response.json()
+            decision = 'Prêt refusé' if result['adjusted_prediction'] == 1 else 'Prêt accordé'
+            st.write(f"Prédiction : {decision}")
+            st.write(f"Probabilités : {result['probabilities']}")
+        else:
+            st.error(f"Erreur de l'API : {response.status_code}, {response.text}")
+    except Exception as e:
+        st.error(f"Erreur lors de la requête : {str(e)}")
