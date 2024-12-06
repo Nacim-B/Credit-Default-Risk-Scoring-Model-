@@ -10,11 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+
     - name: Checkout repository
       uses: actions/checkout@v3
 
     - name: Change directory to the subfolder
       run: cd ApiProject
+
+    - name: Set PYTHONPATH
+      run: |
+        export PYTHONPATH="$PYTHONPATH:$(pwd)"
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -29,6 +35,7 @@ jobs:
 
     - name: Run unit tests
       run:
+        export PYTHONPATH="$PYTHONPATH:$(pwd)"
         pytest ApiProject/tests/ --maxfail=1 --disable-warnings  # Run tests and stop at the first failure
 
 
