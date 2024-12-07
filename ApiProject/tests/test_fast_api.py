@@ -83,7 +83,7 @@ def test_predict_proba_internal_error(mocker):
     Teste si l'API gère correctement une exception interne
     """
     # Simulez une exception dans pipeline_api.predict_proba
-    mock_predict_proba = mocker.patch("fast_api.pipeline_api.predict_proba")
+    mock_predict_proba = mocker.patch("ApiProject.fast_api.pipeline_api.predict_proba")
     mock_predict_proba.side_effect = Exception("Internal Error")
 
     # Données d'entrée valides
@@ -110,7 +110,7 @@ def test_predict_proba_threshold_calculation(mocker):
     Teste si le seuil (threshold) et la classification sont calculés correctement
     """
     # Simulez les probabilités de sortie du modèle
-    mock_predict_proba = mocker.patch("fast_api.pipeline_api.predict_proba")
+    mock_predict_proba = mocker.patch("ApiProject.fast_api.pipeline_api.predict_proba")
     mock_predict_proba.return_value = [[0.2, 0.8]]  # Probabilités pour les classes 0 et 1
 
     # Données d'entrée valides
