@@ -2,25 +2,17 @@ name: Deploy API to Render
 
 on:
   workflow_dispatch:
-    branches:
-      - master
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-
-
     - name: Checkout repository
       uses: actions/checkout@v3
 
     - name: Change directory to the subfolder
       run: cd ApiProject
-
-    - name: Set PYTHONPATH
-      run: |
-        export PYTHONPATH="$PYTHONPATH:$(pwd)"
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -28,16 +20,14 @@ jobs:
         python-version: '3.11.10'
 
     - name: Install dependencies
-      run:
-        cd ApiProject|
+      run: |
+        cd ApiProject
         python -m pip install --upgrade pip
-        pip install render-python
+        python -m pip install -r requirements.txt
 
     - name: Run unit tests
-      run:
-        export PYTHONPATH="$PYTHONPATH:$(pwd)"
+      run: |
         pytest ApiProject/tests/ --maxfail=1 --disable-warnings  # Run tests and stop at the first failure
-
 
     - name: Deploy to Render
       if: success()
@@ -45,7 +35,6 @@ jobs:
         RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
         cd ApiProject
-        render services update srv-ct9di9popnds73e7v66g \
-          --service-type web \
-          --branch master \
-          --env python
+        curl -X POST "https://api.render.com/deploy/srv-ct9di9popnds73e7v66g?key=${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"clearCache":true}'
