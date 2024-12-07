@@ -19,6 +19,7 @@ api_app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Define the input schema for the API
 class PredictionRequest(BaseModel):
     EXT_SOURCE_2: float
@@ -34,7 +35,7 @@ def predict_proba(request: PredictionRequest):
     try:
         data = pd.DataFrame([request.dict()])
         probabilities = pipeline_api.predict_proba(data)[0]
-        cost_ratio = 3
+        cost_ratio = 1
         adjusted_threshold = 1 / (1 + cost_ratio)
         predicted_class = 1 if probabilities[1] >= adjusted_threshold else 0
 
