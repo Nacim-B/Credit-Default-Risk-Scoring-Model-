@@ -40,7 +40,7 @@ def predict_proba(request: PredictionRequest):
         predicted_class = 1 if probabilities[1] >= adjusted_threshold else 0
 
         return {
-            "probabilities": "test de resultats",
+            "probabilities": list(probabilities),
             "adjusted_prediction": predicted_class,
             "adjusted_threshold": adjusted_threshold,
         }
