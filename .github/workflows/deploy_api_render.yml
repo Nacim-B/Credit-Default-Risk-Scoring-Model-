@@ -35,7 +35,6 @@ jobs:
         RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
       run: |
         cd ApiProject
-        curl -X POST https://api.render.com/v1/services/srv-ct9di9popnds73e7v66g/deploys \
-          -H "Authorization: Bearer $RENDER_API_KEY" \
+        curl -X POST "https://api.render.com/deploy/srv-ct9di9popnds73e7v66g?key=${{ secrets.RENDER_API_KEY }}" \
           -H "Content-Type: application/json" \
-          -d '{"clearCache":true, "branch":"master"}'
+          -d '{"clearCache":true}'
